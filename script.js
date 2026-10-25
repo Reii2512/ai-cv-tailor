@@ -2,16 +2,13 @@
 const SUPABASE_URL = 'https://rnvhxtcecetvhofpqmfp.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_toGh6AjVMcFMZl3cPsDPoQ__fooMvq3';
 
-// Cek apakah library Supabase berhasil dimuat
+// Inisialisasi Supabase Client
 try {
     if (window.supabase) {
         window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log('Supabase loaded successfully');
-    } else {
-        alert('FATAL: CDN Supabase gagal dimuat! Cek koneksi internet.');
     }
 } catch (e) {
-    alert('FATAL Init: ' + e.message);
+    console.error('Init error:', e);
 }
 
 // Cek status sesi saat halaman dibuka
@@ -45,19 +42,15 @@ function handleAuthSession(session) {
     }
 }
 
-// Fungsi Login dengan Alarm Alert
+// Fungsi Login Google Bersih (Tanpa Popup Mengganggu)
 async function loginWithGoogle() {
-    alert('1. Tombol berhasil disentuh!');
-
     if (!window.supabaseClient) {
         alert('ERROR: Supabase Client belum siap!');
         return;
     }
 
     try {
-        alert('2. Menghubungkan ke Google Auth Supabase...');
-        
-        const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+        const { error } = await window.supabaseClient.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 redirectTo: window.location.origin + window.location.pathname
@@ -65,13 +58,10 @@ async function loginWithGoogle() {
         });
 
         if (error) {
-            alert('Gagal dari Supabase: ' + error.message);
-            return;
+            alert('Gagal Google Login: ' + error.message);
         }
-
-        alert('3. Berhasil memanggil auth, mengalihkan...');
     } catch (err) {
-        alert('Exception Error: ' + err.message);
+        alert('Terjadi kesalahan sistem: ' + err.message);
     }
 }
 
