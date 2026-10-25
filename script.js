@@ -5,12 +5,8 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Cek status sesi login saat halaman dimuat
 window.addEventListener('DOMContentLoaded', async () => {
-    try {
-        const { data: { session } } = await supabase.auth.getSession();
-        handleAuthSession(session);
-    } catch (err) {
-        console.error('Session error:', err);
-    }
+    const { data: { session } } = await supabase.auth.getSession();
+    handleAuthSession(session);
 
     supabase.auth.onAuthStateChange((_event, session) => {
         handleAuthSession(session);
@@ -33,42 +29,20 @@ function handleAuthSession(session) {
     }
 }
 
-// Fungsi Login Google Khusus WebView (Acode Android)
+// Fungsi Login Google Standar untuk GitHub Pages (HTTPS)
 async function loginWithGoogle() {
-    alert('1. Tombol diklik, bersiap memanggil Supabase...');
-
     try {
-        if (!supabase) {
-            alert('ERROR: Supabase client belum terinisialisasi!');
-            return;
-        }
-
-        alert('2. Menghubungkan ke Supabase Auth endpoint...');
-        
-        const { data, error } = await supabase.auth.signInWithOAuth({
+        const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-                skipBrowserRedirect: true,
-                redirectTo: window.location.origin
+                redirectTo: window.location.origin + window.location.pathname
             }
         });
-
-        alert('3. Respon dari Supabase diterima!');
-
         if (error) {
-            alert('Gagal dari Supabase: ' + error.message);
-            return;
+            alert('Gagal Google Login: ' + error.message);
         }
-
-        if (data && data.url) {
-            alert('4. URL didapat, mengalihkan ke Google...');
-            window.location.href = data.url;
-        } else {
-            alert('ERROR: Data URL kosong dari Supabase!');
-        }
-
     } catch (err) {
-        alert('FATAL CATCH ERROR: ' + err.message);
+        alert('Terjadi kesalahan sistem: ' + err.message);
     }
 }
 
@@ -104,7 +78,7 @@ function saveApiKey() {
 async function generateCV() {
     const apiKey = localStorage.getItem('gemini_api_key');
     if (!apiKey) {
-        alert('Mohon masukkan Gemini API Key terlebih dahulu melalui ikon kunci (🔑)!');
+        alert('Mohon masukkan Gemini API Key terlebih dahulu melalui ikon kunci (🔑) di atas!');
         openApiKeyModal();
         return;
     }
