@@ -1,18 +1,33 @@
+// Konfigurasi Supabase
 const SUPABASE_URL = 'https://rnvhxtcecetvhofpqmfp.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_toGh6AjVMcFMZl3cPsDPoQ__fooMvq3';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Cek apakah library Supabase berhasil dimuat
+try {
+    if (window.supabase) {
+        window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('Supabase loaded successfully');
+    } else {
+        alert('FATAL: CDN Supabase gagal dimuat! Cek koneksi internet.');
+    }
+} catch (e) {
+    alert('FATAL Init: ' + e.message);
+}
+
+// Cek status sesi saat halaman dibuka
 window.addEventListener('DOMContentLoaded', async () => {
     try {
-        const { data: { session } } = await supabase.auth.getSession();
-        handleAuthSession(session);
+        if (window.supabaseClient) {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            handleAuthSession(session);
+
+            window.supabaseClient.auth.onAuthStateChange((_event, session) => {
+                handleAuthSession(session);
+            });
+        }
     } catch (err) {
         console.error('Session error:', err);
     }
-
-    supabase.auth.onAuthStateChange((_event, session) => {
-        handleAuthSession(session);
-    });
 });
 
 function handleAuthSession(session) {
@@ -30,9 +45,19 @@ function handleAuthSession(session) {
     }
 }
 
+// Fungsi Login dengan Alarm Alert
 async function loginWithGoogle() {
+    alert('1. Tombol berhasil disentuh!');
+
+    if (!window.supabaseClient) {
+        alert('ERROR: Supabase Client belum siap!');
+        return;
+    }
+
     try {
-        const { error } = await supabase.auth.signInWithOAuth({
+        alert('2. Menghubungkan ke Google Auth Supabase...');
+        
+        const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 redirectTo: window.location.origin + window.location.pathname
@@ -40,16 +65,21 @@ async function loginWithGoogle() {
         });
 
         if (error) {
-            alert('Gagal Google Login: ' + error.message);
+            alert('Gagal dari Supabase: ' + error.message);
+            return;
         }
+
+        alert('3. Berhasil memanggil auth, mengalihkan...');
     } catch (err) {
-        alert('Terjadi kesalahan sistem: ' + err.message);
+        alert('Exception Error: ' + err.message);
     }
 }
 
 async function logout() {
-    await supabase.auth.signOut();
-    window.location.reload();
+    if (window.supabaseClient) {
+        await window.supabaseClient.auth.signOut();
+        window.location.reload();
+    }
 }
 
 function openApiKeyModal() {
