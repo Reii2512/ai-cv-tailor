@@ -104,13 +104,12 @@ textarea:focus {
     border-color: #2563eb;
 }
 
-/* Tombol Google & Utama */
 .btn-google {
     width: 100%;
     background: #ffffff;
     border: 1px solid #ccc;
     color: #333;
-    padding: 12px;
+    padding: 14px;
     border-radius: 8px;
     font-size: 15px;
     font-weight: 500;
@@ -119,11 +118,14 @@ textarea:focus {
     justify-content: center;
     gap: 10px;
     cursor: pointer;
+    position: relative;
+    z-index: 999;
+    pointer-events: auto !important;
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .google-icon {
-    pointer-events: none; /* KRUSIAL: Agar klik tembus langsung ke tombol */
+    pointer-events: none;
 }
 
 .btn-primary {
@@ -178,7 +180,6 @@ textarea:focus {
     overflow-y: auto;
 }
 
-/* Modal */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -187,6 +188,7 @@ textarea:focus {
     justify-content: center;
     align-items: center;
     padding: 16px;
+    z-index: 9999;
 }
 
 .modal-content {

@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Custom CV Generator</title>
+    <title>AI CV Tailor</title>
     <link rel="stylesheet" href="style.css">
     <!-- Supabase JS Client v2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-    <!-- HALAMAN LOGIN (Tampil jika belum login) -->
+    <!-- HALAMAN LOGIN -->
     <div id="login-view" class="container">
         <div class="card login-card">
             <div class="app-logo">🚀</div>
             <h1>AI CV Tailor</h1>
-            <p>Buat CV disesuaikan dengan Job Description secara instan pakai Al Gemini.</p>
+            <p>Buat CV disesuaikan dengan Job Description secara instan pakai AI Gemini.</p>
             
             <button onclick="loginWithGoogle()" class="btn-google">
                 <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <!-- HALAMAN DASHBOARD (Tampil setelah berhasil login) -->
+    <!-- HALAMAN DASHBOARD -->
     <div id="dashboard-view" class="container" style="display: none;">
         <header class="app-header">
             <h2>✨ AI CV Tailor</h2>
@@ -41,13 +41,11 @@
         </header>
 
         <main class="app-main">
-            <!-- Target Lowongan Kerja -->
             <div class="card">
                 <h2>Target Lowongan Kerja</h2>
                 <textarea id="job-desc" placeholder="Paste Job Description (JD) perusahaan yang dilamar di sini..."></textarea>
             </div>
 
-            <!-- Data Mentah Pengguna -->
             <div class="card">
                 <h2>Data Mentah Anda (CV Sumber)</h2>
                 <p class="text-muted">Masukkan ringkasan pengalaman, pendidikan, & skill kamu:</p>
@@ -56,7 +54,6 @@
                 <button onclick="generateCV()" class="btn-primary">Generate Custom CV ✨</button>
             </div>
 
-            <!-- Hasil Output CV -->
             <div id="output-card" class="card" style="display: none;">
                 <h2>Hasil Custom CV</h2>
                 <div id="cv-result-content" class="result-box"></div>
@@ -65,7 +62,7 @@
         </main>
     </div>
 
-    <!-- MODAL API KEY GEMINI -->
+    <!-- MODAL API KEY -->
     <div id="api-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <h3>Atur Gemini API Key</h3>

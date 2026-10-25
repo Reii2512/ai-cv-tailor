@@ -1,19 +1,20 @@
-// Konfigurasi Supabase
 const SUPABASE_URL = 'https://rnvhxtcecetvhofpqmfp.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_toGh6AjVMcFMZl3cPsDPoQ__fooMvq3';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Cek status sesi login saat halaman dimuat
 window.addEventListener('DOMContentLoaded', async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    handleAuthSession(session);
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        handleAuthSession(session);
+    } catch (err) {
+        console.error('Session error:', err);
+    }
 
     supabase.auth.onAuthStateChange((_event, session) => {
         handleAuthSession(session);
     });
 });
 
-// Fungsi Navigasi Tampilan UI
 function handleAuthSession(session) {
     const loginView = document.getElementById('login-view');
     const dashboardView = document.getElementById('dashboard-view');
@@ -29,7 +30,6 @@ function handleAuthSession(session) {
     }
 }
 
-// Fungsi Login Google Standar untuk GitHub Pages (HTTPS)
 async function loginWithGoogle() {
     try {
         const { error } = await supabase.auth.signInWithOAuth({
@@ -38,6 +38,7 @@ async function loginWithGoogle() {
                 redirectTo: window.location.origin + window.location.pathname
             }
         });
+
         if (error) {
             alert('Gagal Google Login: ' + error.message);
         }
@@ -46,13 +47,11 @@ async function loginWithGoogle() {
     }
 }
 
-// Fungsi Logout
 async function logout() {
     await supabase.auth.signOut();
     window.location.reload();
 }
 
-// Modal API Key Gemini
 function openApiKeyModal() {
     document.getElementById('api-modal').style.display = 'flex';
     const savedKey = localStorage.getItem('gemini_api_key') || '';
@@ -74,11 +73,10 @@ function saveApiKey() {
     closeApiKeyModal();
 }
 
-// Engine Utama Pemanggil Gemini API
 async function generateCV() {
     const apiKey = localStorage.getItem('gemini_api_key');
     if (!apiKey) {
-        alert('Mohon masukkan Gemini API Key terlebih dahulu melalui ikon kunci (🔑) di atas!');
+        alert('Mohon masukkan Gemini API Key terlebih dahulu melalui ikon kunci (🔑)!');
         openApiKeyModal();
         return;
     }
