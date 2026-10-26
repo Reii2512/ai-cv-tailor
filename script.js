@@ -1,3 +1,12 @@
+// Registrasi Service Worker untuk PWA
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Service Worker berhasil didaftarkan!', reg))
+            .catch(err => console.error('Service Worker gagal:', err));
+    });
+}
+
 const SUPABASE_URL = 'https://rnvhxtcecetvhofpqmfp.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_toGh6AjVMcFMZl3cPsDPoQ__fooMvq3';
 
@@ -594,7 +603,7 @@ Data Kandidat:
 
         paperPreview.className = `cv-paper theme-${selectedTheme}`;
 
-        // MEMBUAT KONTAK MENJADI CLICKABLE HYPERLINKS SECARA AMAN DI JAVASCRIPT
+        // MEMBUAT KONTAK MENJADI CLICKABLE HYPERLINKS
         const contactParts = [];
         if (location) contactParts.push(location);
         if (email) contactParts.push(`<a href="mailto:${email}">${email}</a>`);
@@ -680,7 +689,7 @@ Data Kandidat:
     }
 }
 
-// FUNGSI TOGGLE MODE EDIT (Hanya Mengedit Teks Preview CV Saja, Data Form Input Aman)
+// FUNGSI TOGGLE MODE EDIT (Hanya Mengedit Teks Preview CV Saja)
 function toggleLiveEdit() {
     const paper = document.getElementById('cv-paper-preview');
     const btn = document.getElementById('btn-toggle-edit');
@@ -698,8 +707,8 @@ function toggleLiveEdit() {
         btn.style.color = '#fff';
     } else {
         btn.textContent = 'Aktifkan Mode Edit ✍️';
-        btn.style.background = '#e2e8f0';
-        btn.style.color = '#334155';
+        btn.style.background = '#374151';
+        btn.style.color = '#f3f4f6';
         alert('Perubahan berhasil disimpan pada preview!');
     }
 }
