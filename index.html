@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="style.css">
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- PWA Config -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="icon.svg">
 </head>
 <body>
 
@@ -107,11 +113,21 @@
                     </div>
                 </div>
 
-                <!-- Panel 1: Target Job Description -->
+                <!-- Panel 1: Target PT, Role & Job Description -->
                 <div class="wizard-panel" id="panel-1">
-                    <h3>Target Job Description (JD)</h3>
-                    <p>Tempel lowongan pekerjaan yang ingin kamu lamar di sini agar AI bisa mencocokkan kata kuncinya.</p>
+                    <h3>Target Perusahaan, Posisi & Job Description (JD)</h3>
+                    <p>Masukkan detail lowongan pekerjaan yang ingin kamu lamar.</p>
                     
+                    <div class="form-group">
+                        <label>Nama PT / Perusahaan Tujuan</label>
+                        <input type="text" id="job-company" placeholder="Contoh: PT Solusi Teknologi Nusantara">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Posisi / Role yang Dilamar</label>
+                        <input type="text" id="job-role" placeholder="Contoh: Junior System Administrator">
+                    </div>
+
                     <div class="form-group">
                         <label>Lowongan Pekerjaan (Job Description)</label>
                         <textarea id="job-desc" placeholder="Tempel deskripsi pekerjaan atau kualifikasi di sini..."></textarea>
@@ -125,8 +141,8 @@
 
                 <!-- Panel 2: Profil & Bahasa -->
                 <div class="wizard-panel" id="panel-2">
-                    <h3>Informasi Dasar, Bahasa & Keahlian</h3>
-                    <p>Masukkan data diri, pilih bahasa output CV, dan keahlian yang kamu miliki.</p>
+                    <h3>Informasi Dasar, Bahasa & Kontak</h3>
+                    <p>Masukkan data diri, kontak lengkap, dan keahlian yang kamu miliki.</p>
 
                     <div class="form-group">
                         <label>Pilihan Bahasa Output CV</label>
@@ -138,22 +154,51 @@
 
                     <div class="form-group">
                         <label>Nama Lengkap & Gelar</label>
-                        <input type="text" id="kinobi-name" placeholder="Contoh: Raihan Faishol Hikam, S.Tr.T">
+                        <input type="text" id="kinobi-name" placeholder="Contoh: Budi Santoso, S.T.">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;">
+                            <label>Email Profesional</label>
+                            <input type="text" id="kinobi-email" placeholder="Contoh: budi.santoso@domain.com">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Nomor Telepon / WhatsApp</label>
+                            <div style="display: flex; gap: 6px;">
+                                <select id="kinobi-country-code" style="width: 110px; flex-shrink: 0; font-size: 13px;">
+                                    <option value="+62">🇮🇩 +62</option>
+                                    <option value="+60">🇲🇾 +60</option>
+                                    <option value="+65">🇸🇬 +65</option>
+                                    <option value="+673">🇧🇳 +673</option>
+                                    <option value="+1">🇺🇸 +1</option>
+                                    <option value="+44">🇬🇧 +44</option>
+                                    <option value="+81">🇯🇵 +81</option>
+                                    <option value="+82">🇰🇷 +82</option>
+                                    <option value="+61">🇦🇺 +61</option>
+                                </select>
+                                <input type="text" id="kinobi-phone" placeholder="812-3456-7890" style="flex:1;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Lokasi / Domisili</label>
+                        <input type="text" id="kinobi-location" placeholder="Contoh: Yogyakarta, DIY, Indonesia">
                     </div>
 
                     <div class="form-group">
                         <label>Ringkasan Profesional Singkat</label>
-                        <textarea id="kinobi-summary" placeholder="Contoh: Fresh graduate Teknik Elektronika Telekomunikasi dengan pengalaman magang di industri migas..."></textarea>
+                        <textarea id="kinobi-summary" placeholder="Contoh: Fresh graduate teknik dengan minat kuat pada infrastruktur jaringan..."></textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Keahlian Utama (Dipisahkan koma)</label>
-                        <textarea id="kinobi-skills" placeholder="Contoh: PLC, Troubleshooting, C/C++, Network Engineering, SCADA"></textarea>
+                        <textarea id="kinobi-skills" placeholder="Contoh: Python, Networking, Troubleshooting, SQL"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label>Link Portofolio / LinkedIn</label>
-                        <input type="text" id="kinobi-portfolio-link" placeholder="Contoh: https://portfolioraihan25.netlify.app/">
+                        <input type="text" id="kinobi-portfolio-link" placeholder="Contoh: https://portfolio-budi.netlify.app">
                     </div>
 
                     <div class="wizard-actions">
@@ -172,11 +217,11 @@
                         <div class="experience-item card-sub">
                             <div class="form-group">
                                 <label>Posisi / Jabatan</label>
-                                <input type="text" class="exp-title" placeholder="Contoh: Electrical Maintenance Intern">
+                                <input type="text" class="exp-title" placeholder="Contoh: IT Support Intern">
                             </div>
                             <div class="form-group">
                                 <label>Nama Perusahaan / Instansi</label>
-                                <input type="text" class="exp-company" placeholder="Contoh: PT Patra SK">
+                                <input type="text" class="exp-company" placeholder="Contoh: PT Digital Kreasi Nusantara">
                             </div>
                             <div class="form-row">
                                 <div class="form-group" style="flex:1;">
@@ -190,7 +235,7 @@
                             </div>
                             <div class="form-group full-width">
                                 <label>Deskripsi Tugas</label>
-                                <textarea class="exp-desc" placeholder="Tuliskan tugas dan pencapaian..."></textarea>
+                                <textarea class="exp-desc" placeholder="Contoh: Melakukan pemeliharaan perangkat jaringan..."></textarea>
                             </div>
                             <button type="button" onclick="removeExperience(this)" class="btn-danger-sm">Hapus Pengalaman</button>
                         </div>
@@ -201,22 +246,28 @@
                     <div id="education-container">
                         <div class="education-item card-sub">
                             <div class="form-group">
-                                <label>Gelar & Jurusan</label>
-                                <input type="text" class="edu-degree" placeholder="Contoh: Sarjana Terapan - Teknik Elektronika Telekomunikasi">
-                            </div>
-                            <div class="form-group">
-                                <label>Nama Institusi</label>
-                                <input type="text" class="edu-institution" placeholder="Contoh: Politeknik Caltex Riau">
+                                <label>Nama Institusi / Kampus</label>
+                                <input type="text" class="edu-institution" placeholder="Contoh: Universitas Teknologi Nusantara">
                             </div>
                             <div class="form-row">
                                 <div class="form-group" style="flex:1;">
-                                    <label>Tahun Masuk</label>
-                                    <input type="text" class="edu-start" placeholder="2022">
+                                    <label>Lokasi Kampus</label>
+                                    <input type="text" class="edu-location" placeholder="Contoh: Surabaya, Jawa Timur">
                                 </div>
                                 <div class="form-group" style="flex:1;">
-                                    <label>Tahun Lulus</label>
-                                    <input type="text" class="edu-end" placeholder="2026">
+                                    <label>Gelar & Jurusan</label>
+                                    <input type="text" class="edu-degree" placeholder="Contoh: Sarjana Teknik - Teknik Informatika">
                                 </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="flex:1;">
+                                    <label>Periode Masuk — Lulus</label>
+                                    <input type="text" class="edu-period" placeholder="Contoh: Aug 2021 - Aug 2025">
+                                </div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Rincian / Prestasi (Opsional)</label>
+                                <textarea class="edu-desc" placeholder="Contoh: Lulus dengan predikat Cum Laude (IPK 3.75/4.00)..."></textarea>
                             </div>
                             <button type="button" onclick="removeEducation(this)" class="btn-danger-sm">Hapus Pendidikan</button>
                         </div>
@@ -228,11 +279,11 @@
                         <div class="project-item card-sub">
                             <div class="form-group">
                                 <label>Nama Proyek</label>
-                                <input type="text" class="proj-name" placeholder="Contoh: IoT-Based Smart Poultry Weighing System">
+                                <input type="text" class="proj-name" placeholder="Contoh: E-Commerce Web Platform">
                             </div>
                             <div class="form-group full-width">
                                 <label>Deskripsi & Teknologi</label>
-                                <textarea class="proj-desc" placeholder="Gunakan ESP32, load cell, dll..."></textarea>
+                                <textarea class="proj-desc" placeholder="Contoh: Membangun sistem toko online menggunakan React dan Node.js..."></textarea>
                             </div>
                             <button type="button" onclick="removeProject(this)" class="btn-danger-sm">Hapus Proyek</button>
                         </div>
@@ -259,19 +310,21 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Preview Layout CV Profesional</label>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <label>Preview & Edit Langsung CV</label>
+                            <button type="button" id="btn-toggle-edit" onclick="toggleLiveEdit()" class="btn-secondary" style="padding: 4px 10px; font-size: 11px;">Aktifkan Mode Edit ✍️</button>
+                        </div>
                         <div id="cv-paper-preview" class="cv-paper">
                             <div style="text-align:center; padding:30px; color:#64748b;">Belum ada data yang digenerate.</div>
                         </div>
                     </div>
 
                     <div class="output-actions" style="margin-top: 16px;">
-                        <button type="button" onclick="copyCV()" class="btn-secondary" style="flex:1;">Salin Teks CV 📋</button>
                         <button type="button" onclick="exportToPDF()" class="btn-success" style="flex:1;">Unduh / Cetak PDF 📄</button>
                     </div>
 
                     <div class="wizard-actions" style="margin-top: 16px;">
-                        <button type="button" onclick="switchTab(3)" class="btn-secondary">&larr; Edit Data</button>
+                        <button type="button" onclick="switchTab(3)" class="btn-secondary">&larr; Edit Data Form</button>
                     </div>
                 </div>
             </form>

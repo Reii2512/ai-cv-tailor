@@ -73,10 +73,8 @@ async function saveApiKey() {
     const key = document.getElementById('groq-api-key-input').value.trim();
     if (!key) return alert('API Key kosong!');
     
-    // Simpan ke localStorage
     localStorage.setItem('groq_api_key', key);
 
-    // Sinkronisasi ke tabel user_profiles di Supabase
     if (window.supabaseClient) {
         try {
             const { data: { session } } = await window.supabaseClient.auth.getSession();
@@ -120,8 +118,14 @@ function saveFormDataToLocal() {
     const formData = {
         theme: selectedTheme,
         language: document.getElementById('cv-language')?.value || 'id',
+        jobCompany: document.getElementById('job-company')?.value || '',
+        jobRole: document.getElementById('job-role')?.value || '',
         jobDesc: document.getElementById('job-desc')?.value || '',
         name: document.getElementById('kinobi-name')?.value || '',
+        email: document.getElementById('kinobi-email')?.value || '',
+        countryCode: document.getElementById('kinobi-country-code')?.value || '+62',
+        phone: document.getElementById('kinobi-phone')?.value || '',
+        location: document.getElementById('kinobi-location')?.value || '',
         summary: document.getElementById('kinobi-summary')?.value || '',
         skills: document.getElementById('kinobi-skills')?.value || '',
         portfolioLink: document.getElementById('kinobi-portfolio-link')?.value || '',
@@ -142,10 +146,11 @@ function saveFormDataToLocal() {
 
     document.querySelectorAll('.education-item').forEach(el => {
         formData.educations.push({
-            degree: el.querySelector('.edu-degree')?.value || '',
             institution: el.querySelector('.edu-institution')?.value || '',
-            start: el.querySelector('.edu-start')?.value || '',
-            end: el.querySelector('.edu-end')?.value || ''
+            location: el.querySelector('.edu-location')?.value || '',
+            degree: el.querySelector('.edu-degree')?.value || '',
+            period: el.querySelector('.edu-period')?.value || '',
+            desc: el.querySelector('.edu-desc')?.value || ''
         });
     });
 
@@ -171,8 +176,14 @@ function loadSavedFormData() {
         if (data.language && document.getElementById('cv-language')) {
             document.getElementById('cv-language').value = data.language;
         }
+        if (document.getElementById('job-company')) document.getElementById('job-company').value = data.jobCompany || '';
+        if (document.getElementById('job-role')) document.getElementById('job-role').value = data.jobRole || '';
         if (document.getElementById('job-desc')) document.getElementById('job-desc').value = data.jobDesc || '';
         if (document.getElementById('kinobi-name')) document.getElementById('kinobi-name').value = data.name || '';
+        if (document.getElementById('kinobi-email')) document.getElementById('kinobi-email').value = data.email || '';
+        if (document.getElementById('kinobi-country-code')) document.getElementById('kinobi-country-code').value = data.countryCode || '+62';
+        if (document.getElementById('kinobi-phone')) document.getElementById('kinobi-phone').value = data.phone || '';
+        if (document.getElementById('kinobi-location')) document.getElementById('kinobi-location').value = data.location || '';
         if (document.getElementById('kinobi-summary')) document.getElementById('kinobi-summary').value = data.summary || '';
         if (document.getElementById('kinobi-skills')) document.getElementById('kinobi-skills').value = data.skills || '';
         if (document.getElementById('kinobi-portfolio-link')) document.getElementById('kinobi-portfolio-link').value = data.portfolioLink || '';
@@ -186,25 +197,25 @@ function loadSavedFormData() {
                 item.innerHTML = `
                     <div class="form-group">
                         <label>Posisi / Jabatan</label>
-                        <input type="text" class="exp-title" value="${exp.title}" placeholder="Contoh: Electrical Maintenance Intern">
+                        <input type="text" class="exp-title" value="${exp.title || ''}" placeholder="Contoh: IT Support Intern">
                     </div>
                     <div class="form-group">
                         <label>Nama Perusahaan / Instansi</label>
-                        <input type="text" class="exp-company" value="${exp.company}" placeholder="Contoh: PT Patra SK">
+                        <input type="text" class="exp-company" value="${exp.company || ''}" placeholder="Contoh: PT Digital Kreasi Nusantara">
                     </div>
                     <div class="form-row">
                         <div class="form-group" style="flex:1;">
                             <label>Mulai</label>
-                            <input type="month" class="exp-start" value="${exp.start}">
+                            <input type="month" class="exp-start" value="${exp.start || ''}">
                         </div>
                         <div class="form-group" style="flex:1;">
                             <label>Selesai</label>
-                            <input type="month" class="exp-end" value="${exp.end}">
+                            <input type="month" class="exp-end" value="${exp.end || ''}">
                         </div>
                     </div>
                     <div class="form-group full-width">
                         <label>Deskripsi Tugas</label>
-                        <textarea class="exp-desc">${exp.desc}</textarea>
+                        <textarea class="exp-desc">${exp.desc || ''}</textarea>
                     </div>
                     <button type="button" onclick="removeExperience(this)" class="btn-danger-sm">Hapus Pengalaman</button>
                 `;
@@ -220,22 +231,28 @@ function loadSavedFormData() {
                 item.className = 'education-item card-sub';
                 item.innerHTML = `
                     <div class="form-group">
-                        <label>Gelar & Jurusan</label>
-                        <input type="text" class="edu-degree" value="${edu.degree}" placeholder="Contoh: Sarjana Terapan">
-                    </div>
-                    <div class="form-group">
-                        <label>Nama Institusi</label>
-                        <input type="text" class="edu-institution" value="${edu.institution}" placeholder="Contoh: Politeknik Caltex Riau">
+                        <label>Nama Institusi / Kampus</label>
+                        <input type="text" class="edu-institution" value="${edu.institution || ''}" placeholder="Contoh: Universitas Teknologi Nusantara">
                     </div>
                     <div class="form-row">
                         <div class="form-group" style="flex:1;">
-                            <label>Tahun Masuk</label>
-                            <input type="text" class="edu-start" value="${edu.start}" placeholder="2022">
+                            <label>Lokasi Kampus</label>
+                            <input type="text" class="edu-location" value="${edu.location || ''}" placeholder="Contoh: Surabaya, Jawa Timur">
                         </div>
                         <div class="form-group" style="flex:1;">
-                            <label>Tahun Lulus</label>
-                            <input type="text" class="edu-end" value="${edu.end}" placeholder="2026">
+                            <label>Gelar & Jurusan</label>
+                            <input type="text" class="edu-degree" value="${edu.degree || ''}" placeholder="Contoh: Sarjana Teknik - Informatika">
                         </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;">
+                            <label>Periode Masuk — Lulus</label>
+                            <input type="text" class="edu-period" value="${edu.period || ''}" placeholder="Contoh: Aug 2021 - Aug 2025">
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Rincian / Prestasi (Opsional)</label>
+                        <textarea class="edu-desc">${edu.desc || ''}</textarea>
                     </div>
                     <button type="button" onclick="removeEducation(this)" class="btn-danger-sm">Hapus Pendidikan</button>
                 `;
@@ -252,11 +269,11 @@ function loadSavedFormData() {
                 item.innerHTML = `
                     <div class="form-group">
                         <label>Nama Proyek</label>
-                        <input type="text" class="proj-name" value="${proj.name}" placeholder="Contoh: IoT-Based Smart Poultry">
+                        <input type="text" class="proj-name" value="${proj.name || ''}" placeholder="Contoh: E-Commerce Web Platform">
                     </div>
                     <div class="form-group full-width">
                         <label>Deskripsi & Teknologi</label>
-                        <textarea class="proj-desc">${proj.desc}</textarea>
+                        <textarea class="proj-desc">${proj.desc || ''}</textarea>
                     </div>
                     <button type="button" onclick="removeProject(this)" class="btn-danger-sm">Hapus Proyek</button>
                 `;
@@ -277,11 +294,11 @@ function addExperience() {
     item.innerHTML = `
         <div class="form-group">
             <label>Posisi / Jabatan</label>
-            <input type="text" class="exp-title" placeholder="Contoh: Electrical Maintenance Intern">
+            <input type="text" class="exp-title" placeholder="Contoh: IT Support Intern">
         </div>
         <div class="form-group">
             <label>Nama Perusahaan / Instansi</label>
-            <input type="text" class="exp-company" placeholder="Contoh: PT Patra SK">
+            <input type="text" class="exp-company" placeholder="Contoh: PT Digital Kreasi Nusantara">
         </div>
         <div class="form-row">
             <div class="form-group" style="flex:1;">
@@ -319,22 +336,28 @@ function addEducation() {
     item.className = 'education-item card-sub';
     item.innerHTML = `
         <div class="form-group">
-            <label>Gelar & Jurusan</label>
-            <input type="text" class="edu-degree" placeholder="Contoh: Sarjana Terapan - Teknik Elektronika">
-        </div>
-        <div class="form-group">
-            <label>Nama Institusi</label>
-            <input type="text" class="edu-institution" placeholder="Contoh: Politeknik Caltex Riau">
+            <label>Nama Institusi / Kampus</label>
+            <input type="text" class="edu-institution" placeholder="Contoh: Universitas Teknologi Nusantara">
         </div>
         <div class="form-row">
             <div class="form-group" style="flex:1;">
-                <label>Tahun Masuk</label>
-                <input type="text" class="edu-start" placeholder="2022">
+                <label>Lokasi Kampus</label>
+                <input type="text" class="edu-location" placeholder="Contoh: Surabaya, Jawa Timur">
             </div>
             <div class="form-group" style="flex:1;">
-                <label>Tahun Lulus</label>
-                <input type="text" class="edu-end" placeholder="2026">
+                <label>Gelar & Jurusan</label>
+                <input type="text" class="edu-degree" placeholder="Contoh: Sarjana Teknik - Informatika">
             </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group" style="flex:1;">
+                <label>Periode Masuk — Lulus</label>
+                <input type="text" class="edu-period" placeholder="Contoh: Aug 2021 - Aug 2025">
+            </div>
+        </div>
+        <div class="form-group full-width">
+            <label>Rincian / Prestasi (Opsional)</label>
+            <textarea class="edu-desc" placeholder="Contoh: Lulus dengan predikat Cum Laude (IPK 3.75/4.00)..."></textarea>
         </div>
         <button type="button" onclick="removeEducation(this)" class="btn-danger-sm">Hapus Pendidikan</button>
     `;
@@ -359,11 +382,11 @@ function addProject() {
     item.innerHTML = `
         <div class="form-group">
             <label>Nama Proyek</label>
-            <input type="text" class="proj-name" placeholder="Contoh: IoT-Based Smart Poultry">
+            <input type="text" class="proj-name" placeholder="Contoh: E-Commerce Web Platform">
         </div>
         <div class="form-group full-width">
             <label>Deskripsi & Teknologi</label>
-            <textarea class="proj-desc" placeholder="Gunakan ESP32, load cell, dll..."></textarea>
+            <textarea class="proj-desc" placeholder="Gunakan React, Node.js, dll..."></textarea>
         </div>
         <button type="button" onclick="removeProject(this)" class="btn-danger-sm">Hapus Proyek</button>
     `;
@@ -376,7 +399,7 @@ function removeProject(btn) {
     saveFormDataToLocal();
 }
 
-// FUNGSI PANGGIL GROQ API (Menggunakan Model qwen/qwen3.8-27b dengan format JSON)
+// FUNGSI PANGGIL GROQ API (Menggunakan Model qwen/qwen3.8-27b)
 async function callGroqAIJSON(apiKey, prompt) {
     const url = 'https://api.groq.com/openai/v1/chat/completions';
     
@@ -403,7 +426,7 @@ async function callGroqAIJSON(apiKey, prompt) {
     }
 }
 
-// FUNGSI UTAMA: Analisis ATS & Render Tema Pilihan dengan Animasi Loading
+// FUNGSI UTAMA: Analisis ATS & Render Tema Pilihan dengan Clickable Links
 async function generateKinobiCV() {
     const apiKey = localStorage.getItem('groq_api_key');
     if (!apiKey) {
@@ -413,8 +436,15 @@ async function generateKinobiCV() {
 
     const selectedTheme = document.querySelector('input[name="cv-theme"]:checked')?.value || 'corporate';
     const cvLanguage = document.getElementById('cv-language')?.value || 'id';
+    const jobCompany = document.getElementById('job-company').value.trim();
+    const jobRole = document.getElementById('job-role').value.trim();
     const jobDesc = document.getElementById('job-desc').value.trim();
     const name = document.getElementById('kinobi-name').value.trim();
+    const email = document.getElementById('kinobi-email').value.trim();
+    const countryCode = document.getElementById('kinobi-country-code').value;
+    const phoneInput = document.getElementById('kinobi-phone').value.trim();
+    const fullPhone = phoneInput ? `${countryCode} ${phoneInput}` : '';
+    const location = document.getElementById('kinobi-location').value.trim();
     const summary = document.getElementById('kinobi-summary').value.trim();
     const skills = document.getElementById('kinobi-skills').value.trim();
     const portfolioLink = document.getElementById('kinobi-portfolio-link').value.trim();
@@ -440,16 +470,19 @@ async function generateKinobiCV() {
     const eduElements = document.querySelectorAll('.education-item');
     let educationsText = '';
     eduElements.forEach((el, index) => {
-        const degree = el.querySelector('.edu-degree').value.trim();
         const institution = el.querySelector('.edu-institution').value.trim();
-        const start = el.querySelector('.edu-start').value.trim();
-        const end = el.querySelector('.edu-end').value.trim();
+        const locationEdu = el.querySelector('.edu-location').value.trim();
+        const degree = el.querySelector('.edu-degree').value.trim();
+        const period = el.querySelector('.edu-period').value.trim();
+        const desc = el.querySelector('.edu-desc').value.trim();
         
-        if (degree || institution) {
+        if (institution || degree) {
             educationsText += `\n[Pendidikan ${index + 1}]
-- Gelar/Jurusan: ${degree}
 - Institusi: ${institution}
-- Tahun: ${start} - ${end}\n`;
+- Lokasi: ${locationEdu}
+- Gelar & Jurusan: ${degree}
+- Periode: ${period}
+- Rincian: ${desc}\n`;
         }
     });
 
@@ -493,19 +526,26 @@ async function generateKinobiCV() {
         ? "SELURUH OUTPUT CV (nama section, ringkasan, deskripsi pekerjaan, dll) HARUS DITULIS DALAM BAHASA INGGRIS (ENGLISH) YANG PROFESIONAL." 
         : "SELURUH OUTPUT CV HARUS DITULIS DALAM BAHASA INDONESIA YANG PROFESIONAL.";
 
-    const prompt = `Bertindaklah sebagai Senior HR Recruiter dan Professional Resume Writer. Analisis data kandidat terhadap Job Description berikut dan berikan respons HANYA dalam format JSON murni dengan struktur persis berikut:
+    const prompt = `Bertindaklah sebagai Senior HR Recruiter dan Professional Resume Writer. Analisis data kandidat terhadap Target Perusahaan, Target Posisi, dan Job Description berikut.
+
+PENTING UNTUK FORMAT HEADER:
+- Variabel "fullName" HANYA diisi dengan nama lengkap kandidat saja TANPA gelar akademis.
+- Variabel "professionalTitle" diisi dengan gabungan gelar dan peran utama secara profesional.
+
+Berikan respons HANYA dalam format JSON murni dengan struktur persis berikut:
 {
   "atsScore": "90%",
   "feedback": "Ulasan singkat kelebihan, kekurangan, dan saran perbaikan agar lolos ATS.",
-  "fullName": "${name}",
-  "professionalTitle": "Judul/Peran Profesional Utama yang Dituju",
-  "contactInfo": "${portfolioLink ? 'Portfolio: ' + portfolioLink : 'Kontak Profesional'}",
+  "fullName": "Nama Lengkap Tanpa Gelar",
+  "professionalTitle": "Gelar & Judul Peran Utama",
   "summary": "Ringkasan profesional yang dioptimalkan...",
   "educations": [
     {
-      "degree": "Jenjang & Jurusan",
       "institution": "Nama Institusi",
-      "period": "Tahun Masuk - Tahun Lulus"
+      "location": "Lokasi Kampus",
+      "degree": "Gelar & Jurusan",
+      "period": "Rentang Waktu",
+      "description": "Rincian prestasi atau keterangan..."
     }
   ],
   "experiences": [
@@ -513,7 +553,7 @@ async function generateKinobiCV() {
       "title": "Jabatan yang dioptimalkan ATS",
       "company": "Nama Perusahaan",
       "period": "Bulan Tahun - Bulan Tahun",
-      "description": "Butir pencapaian tugas profesional yang disesuaikan dengan JD..."
+      "description": "Butir pencapaian tugas profesional yang disesuaikan..."
     }
   ],
   "projects": [
@@ -527,18 +567,23 @@ async function generateKinobiCV() {
 
 INSTRUKSI BAHASA: ${languageInstruction}
 
+Target Perusahaan (PT):
+${jobCompany || 'Tidak disebutkan secara spesifik'}
+
+Target Posisi / Role yang Dilamar:
+${jobRole || 'Tidak disebutkan secara spesifik'}
+
 Target Job Description:
 ${jobDesc}
 
 Data Kandidat:
 - Tema Dipilih: ${selectedTheme}
-- Nama: ${name}
+- Nama & Gelar Input: ${name}
 - Ringkasan: ${summary}
 - Riwayat Pendidikan:${educationsText}
 - Riwayat Pengalaman Kerja:${experiencesText}
 - Daftar Proyek:${projectsText}
-- Skill: ${skills}
-- Link Portfolio: ${portfolioLink}`;
+- Skill: ${skills}`;
 
     try {
         const result = await callGroqAIJSON(apiKey, prompt);
@@ -549,17 +594,31 @@ Data Kandidat:
 
         paperPreview.className = `cv-paper theme-${selectedTheme}`;
 
+        // MEMBUAT KONTAK MENJADI CLICKABLE HYPERLINKS SECARA AMAN DI JAVASCRIPT
+        const contactParts = [];
+        if (location) contactParts.push(location);
+        if (email) contactParts.push(`<a href="mailto:${email}">${email}</a>`);
+        if (fullPhone) {
+            const cleanPhone = fullPhone.replace(/[^0-9+]/g, '');
+            contactParts.push(`<a href="tel:${cleanPhone}">${fullPhone}</a>`);
+        }
+        if (portfolioLink) {
+            const formattedUrl = portfolioLink.startsWith('http') ? portfolioLink : 'https://' + portfolioLink;
+            contactParts.push(`<a href="${formattedUrl}" target="_blank">${portfolioLink}</a>`);
+        }
+        const finalContactHtml = contactParts.join(' • ');
+
         let htmlContent = `
             <div class="cv-paper-header">
-                <h1>${result.fullName || name}</h1>
-                <div class="cv-title-role">${result.professionalTitle || 'Professional Candidate'}</div>
-                <div class="cv-contact">${result.contactInfo || portfolioLink || ''}</div>
+                <h1 contenteditable="false">${result.fullName || name}</h1>
+                <div class="cv-title-role" contenteditable="false">${result.professionalTitle || jobRole || 'Professional Candidate'}</div>
+                <div class="cv-contact" contenteditable="false">${finalContactHtml}</div>
             </div>
 
-            <div class="cv-section-title">${cvLanguage === 'en' ? 'Professional Summary' : 'Ringkasan Profesional'}</div>
-            <p>${result.summary || summary}</p>
+            <div class="cv-section-title" contenteditable="false">${cvLanguage === 'en' ? 'Professional Summary' : 'Ringkasan Profesional'}</div>
+            <p contenteditable="false">${result.summary || summary}</p>
 
-            <div class="cv-section-title">${cvLanguage === 'en' ? 'Professional Experience / Internships' : 'Pengalaman Kerja / Magang'}</div>
+            <div class="cv-section-title" contenteditable="false">${cvLanguage === 'en' ? 'Professional Experience / Internships' : 'Pengalaman Kerja / Magang'}</div>
         `;
 
         if (result.experiences && result.experiences.length > 0) {
@@ -567,43 +626,45 @@ Data Kandidat:
                 htmlContent += `
                     <div class="cv-item">
                         <div class="cv-item-header">
-                            <span>${exp.title} — <em>${exp.company}</em></span>
-                            <span>${exp.period}</span>
+                            <span contenteditable="false">${exp.title} — <em>${exp.company}</em></span>
+                            <span contenteditable="false">${exp.period}</span>
                         </div>
-                        <p>${exp.description}</p>
+                        <p contenteditable="false">${exp.description}</p>
                     </div>
                 `;
             });
         }
 
-        htmlContent += `<div class="cv-section-title">${cvLanguage === 'en' ? 'Education' : 'Pendidikan'}</div>`;
+        htmlContent += `<div class="cv-section-title" contenteditable="false">${cvLanguage === 'en' ? 'Education' : 'Jenjang Pendidikan'}</div>`;
         if (result.educations && result.educations.length > 0) {
             result.educations.forEach(edu => {
                 htmlContent += `
                     <div class="cv-item">
                         <div class="cv-item-header">
-                            <span>${edu.degree} — <em>${edu.institution}</em></span>
-                            <span>${edu.period}</span>
+                            <span contenteditable="false">${edu.institution} — <em>${edu.location}</em></span>
+                            <span contenteditable="false">${edu.period}</span>
                         </div>
+                        <p contenteditable="false"><strong>${edu.degree}</strong></p>
+                        ${edu.description ? `<p contenteditable="false">${edu.description}</p>` : ''}
                     </div>
                 `;
             });
         }
 
         htmlContent += `
-            <div class="cv-section-title">${cvLanguage === 'en' ? 'Core Skills' : 'Keahlian Utama (Skills)'}</div>
-            <p>${result.skills || skills}</p>
+            <div class="cv-section-title" contenteditable="false">${cvLanguage === 'en' ? 'Core Skills' : 'Keahlian Utama (Skills)'}</div>
+            <p contenteditable="false">${result.skills || skills}</p>
         `;
 
         if (result.projects && result.projects.length > 0) {
-            htmlContent += `<div class="cv-section-title">${cvLanguage === 'en' ? 'Projects & Portfolio' : 'Proyek & Portofolio'}</div>`;
+            htmlContent += `<div class="cv-section-title" contenteditable="false">${cvLanguage === 'en' ? 'Projects & Portfolio' : 'Proyek & Portofolio'}</div>`;
             result.projects.forEach(proj => {
                 htmlContent += `
                     <div class="cv-item">
                         <div class="cv-item-header">
-                            <span><strong>${proj.name}</strong></span>
+                            <span contenteditable="false"><strong>${proj.name}</strong></span>
                         </div>
-                        <p>${proj.description}</p>
+                        <p contenteditable="false">${proj.description}</p>
                     </div>
                 `;
             });
@@ -619,12 +680,34 @@ Data Kandidat:
     }
 }
 
-function copyCV() {
+// FUNGSI TOGGLE MODE EDIT (Hanya Mengedit Teks Preview CV Saja, Data Form Input Aman)
+function toggleLiveEdit() {
     const paper = document.getElementById('cv-paper-preview');
-    if (!paper || !paper.innerText.trim()) return alert('Belum ada isi CV!');
-    navigator.clipboard.writeText(paper.innerText).then(() => alert('Teks CV berhasil disalin ke clipboard! 📋'));
+    const btn = document.getElementById('btn-toggle-edit');
+    const editables = paper.querySelectorAll('h1, .cv-title-role, .cv-contact, p, span');
+    
+    const isEditing = paper.classList.toggle('editable-mode');
+    
+    editables.forEach(el => {
+        el.setAttribute('contenteditable', isEditing ? 'true' : 'false');
+    });
+
+    if (isEditing) {
+        btn.textContent = 'Selesai Edit ✅';
+        btn.style.background = '#10b981';
+        btn.style.color = '#fff';
+    } else {
+        btn.textContent = 'Aktifkan Mode Edit ✍️';
+        btn.style.background = '#e2e8f0';
+        btn.style.color = '#334155';
+        alert('Perubahan berhasil disimpan pada preview!');
+    }
 }
 
 function exportToPDF() {
+    const paper = document.getElementById('cv-paper-preview');
+    if (paper.classList.contains('editable-mode')) {
+        toggleLiveEdit();
+    }
     window.print();
 }
