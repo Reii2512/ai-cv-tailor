@@ -28,6 +28,7 @@ html, body {
 }
 
 body {
+    background-color: var(--bg-main) !important;
     color: var(--text-main);
     display: flex;
     justify-content: center;
@@ -405,6 +406,9 @@ textarea { height: 95px; resize: vertical; }
     100% { transform: rotate(360deg); }
 }
 
+/* =========================================
+   CV PAPER & MULTI-THEME STYLING
+   ========================================= */
 .cv-paper {
     background: #ffffff;
     border: 1px solid #cbd5e1;
@@ -428,7 +432,6 @@ textarea { height: 95px; resize: vertical; }
 
 .cv-paper .cv-paper-header {
     text-align: left;
-    border-bottom: 1px solid #374151;
     padding-bottom: 8px;
     margin-bottom: 12px;
 }
@@ -436,7 +439,6 @@ textarea { height: 95px; resize: vertical; }
 .cv-paper .cv-paper-header h1 {
     font-size: 16px;
     font-weight: 700;
-    color: #111827;
     text-transform: uppercase;
     letter-spacing: 0.3px;
     margin-bottom: 2px;
@@ -446,7 +448,6 @@ textarea { height: 95px; resize: vertical; }
 .cv-paper .cv-title-role {
     font-size: 11.5px;
     font-weight: 600;
-    color: #4b5563;
     margin-bottom: 3px;
 }
 
@@ -456,7 +457,6 @@ textarea { height: 95px; resize: vertical; }
 }
 
 .cv-paper .cv-contact a {
-    color: #2563eb;
     text-decoration: none;
     font-weight: 500;
 }
@@ -469,8 +469,6 @@ textarea { height: 95px; resize: vertical; }
     font-size: 11.5px;
     font-weight: bold;
     text-transform: uppercase;
-    color: #111827;
-    border-bottom: 1px solid #d1d5db;
     padding-bottom: 2px;
     margin-top: 14px;
     margin-bottom: 6px;
@@ -483,7 +481,6 @@ textarea { height: 95px; resize: vertical; }
     justify-content: space-between;
     font-weight: bold;
     font-size: 11px;
-    color: #1f2937;
     margin-bottom: 2px;
 }
 
@@ -495,6 +492,27 @@ textarea { height: 95px; resize: vertical; }
     text-justify: inter-word;
 }
 .cv-paper ul { padding-left: 14px; }
+
+/* 1. Tema Corporate Clean */
+.cv-paper.theme-corporate .cv-paper-header { border-bottom: 2px solid #0f172a; }
+.cv-paper.theme-corporate h1 { color: #0f172a; }
+.cv-paper.theme-corporate .cv-title-role { color: #4b5563; }
+.cv-paper.theme-corporate .cv-contact a { color: #2563eb; }
+.cv-paper.theme-corporate .cv-section-title { border-bottom: 1.5px solid #0f172a; color: #0f172a; }
+
+/* 2. Tema Modern Blue */
+.cv-paper.theme-modern .cv-paper-header { border-bottom: 2px solid #2563eb; }
+.cv-paper.theme-modern h1 { color: #1e3a8a; }
+.cv-paper.theme-modern .cv-title-role { color: #2563eb; }
+.cv-paper.theme-modern .cv-contact a { color: #2563eb; }
+.cv-paper.theme-modern .cv-section-title { border-bottom: 1.5px solid #2563eb; color: #2563eb; }
+
+/* 3. Tema Executive Classic */
+.cv-paper.theme-executive .cv-paper-header { border-bottom: 3px double #111827; }
+.cv-paper.theme-executive h1 { color: #111827; font-family: 'Georgia', serif; }
+.cv-paper.theme-executive .cv-title-role { color: #374151; font-style: italic; }
+.cv-paper.theme-executive .cv-contact a { color: #111827; }
+.cv-paper.theme-executive .cv-section-title { border-bottom: 3px double #111827; color: #111827; font-family: 'Georgia', serif; }
 
 .output-section { border-top: 4px solid #10b981; }
 .output-actions { display: flex; gap: 10px; }

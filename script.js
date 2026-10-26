@@ -514,23 +514,29 @@ async function generateKinobiCV() {
     const scoreDesc = document.getElementById('score-desc');
     const feedbackBox = document.getElementById('ats-feedback-box');
     const paperPreview = document.getElementById('cv-paper-preview');
+    const coverLetterBox = document.getElementById('cover-letter-box');
 
     scoreCircle.textContent = '...';
     scoreDesc.textContent = 'Menganalisis kecocokan ATS...';
-    feedbackBox.textContent = 'Qwen AI sedang menganalisis kecocokan dan mengoptimalkan teks...';
+    feedbackBox.textContent = 'Senior Headhunter sedang meninjau profil dan kecocokan lowongan...';
+    coverLetterBox.textContent = 'Menyiapkan draft Cover Letter & Body Email...';
     
     paperPreview.innerHTML = `
         <div class="loading-container">
             <div class="spinner"></div>
-            <span>Qwen AI sedang merancang layout dokumen CV profesional...</span>
+            <span>Senior Headhunter & Qwen AI sedang menyusun optimasi dokumen CV...</span>
         </div>
     `;
 
     const languageInstruction = cvLanguage === 'en' 
-        ? "SELURUH OUTPUT CV (nama section, ringkasan, deskripsi pekerjaan, dll) HARUS DITULIS DALAM BAHASA INGGRIS (ENGLISH) YANG PROFESIONAL." 
-        : "SELURUH OUTPUT CV HARUS DITULIS DALAM BAHASA INDONESIA YANG PROFESIONAL.";
+        ? "SELURUH OUTPUT CV & COVER LETTER HARUS DITULIS DALAM BAHASA INGGRIS (ENGLISH) YANG PROFESIONAL." 
+        : "SELURUH OUTPUT CV & COVER LETTER HARUS DITULIS DALAM BAHASA INDONESIA YANG PROFESIONAL.";
 
-    const prompt = `Bertindaklah sebagai Senior HR Recruiter dan Professional Resume Writer. Analisis data kandidat terhadap Target Perusahaan, Target Posisi, dan Job Description berikut.
+    const prompt = `Bertindaklah sebagai Senior Headhunter dan Senior HRD Profesional yang sangat tajam, objektif, namun proporsional dan realistis. Analisis data kandidat terhadap Target Perusahaan, Target Posisi, dan Job Description berikut.
+
+ATURAN EVALUASI ADAPTIF BERDASARKAN LEVEL POSISI:
+- Jika posisi yang dilamar adalah Entry-Level, Junior, Trainee, Fresh Graduate, atau Magang (Intern): Fokuskan penilaian pada potensi dasar, fondasi keahlian teknis, proyek (capstone/portofolio), pengalaman magang, dan antusiasme belajar. Jangan menghukum kandidat karena kurangnya pengalaman bertahun-tahun atau posisi manajerial. Berikan saran yang membangun untuk anak fresh graduate/junior.
+- Jika posisi Mid-Level atau Senior: Nilai aspek kepemimpinan, metrik pencapaian bisnis, skalabilitas, dan penguasaan teknis tingkat lanjut secara ketat.
 
 PENTING UNTUK FORMAT HEADER:
 - Variabel "fullName" HANYA diisi dengan nama lengkap kandidat saja TANPA gelar akademis.
@@ -539,10 +545,10 @@ PENTING UNTUK FORMAT HEADER:
 Berikan respons HANYA dalam format JSON murni dengan struktur persis berikut:
 {
   "atsScore": "90%",
-  "feedback": "Ulasan singkat kelebihan, kekurangan, dan saran perbaikan agar lolos ATS.",
+  "feedback": "Ulasan kritis ala headhunter: soroti kecocokan, keunggulan kompetitif kandidat, serta celah/gap secara jujur namun tetap realistis dan suportif sesuai level posisi yang dilamar.",
   "fullName": "Nama Lengkap Tanpa Gelar",
   "professionalTitle": "Gelar & Judul Peran Utama",
-  "summary": "Ringkasan profesional yang dioptimalkan...",
+  "summary": "Ringkasan profesional yang dioptimalkan sesuai level posisi...",
   "educations": [
     {
       "institution": "Nama Institusi",
@@ -566,16 +572,17 @@ Berikan respons HANYA dalam format JSON murni dengan struktur persis berikut:
       "description": "Deskripsi proyek..."
     }
   ],
-  "skills": "${skills}"
+  "skills": "${skills}",
+  "coverLetter": "Tuliskan draft body email / cover letter lamaran kerja profesional yang nada bicaranya pas, percaya diri, persuasif, dan realistis dengan level posisi yang dilamar (misalnya menonjolkan semangat belajar & fundamental kuat untuk entry-level) kepada HRD perusahaan terkait."
 }
 
 INSTRUKSI BAHASA: ${languageInstruction}
 
 Target Perusahaan (PT):
-${jobCompany || 'Tidak disebutkan secara spesifik'}
+${jobCompany || 'Perusahaan'}
 
 Target Posisi / Role yang Dilamar:
-${jobRole || 'Tidak disebutkan secara spesifik'}
+${jobRole || 'Posisi Terkait'}
 
 Target Job Description:
 ${jobDesc}
@@ -595,6 +602,7 @@ Data Kandidat:
         scoreCircle.textContent = result.atsScore || '90%';
         scoreDesc.textContent = 'Analisis dan optimasi ATS selesai.';
         feedbackBox.textContent = result.feedback || 'CV berhasil dioptimalkan sesuai lowongan.';
+        coverLetterBox.textContent = result.coverLetter || 'Cover letter tidak tersedia.';
 
         paperPreview.className = `cv-paper theme-${selectedTheme}`;
 
@@ -681,6 +689,18 @@ Data Kandidat:
         feedbackBox.textContent = 'Terjadi Kesalahan: ' + err.message;
         paperPreview.innerHTML = `<div style="color:red; padding:20px;">Gagal memuat preview: ${err.message}</div>`;
     }
+}
+
+function copyCoverLetter() {
+    const text = document.getElementById('cover-letter-box').textContent;
+    if (!text || text.includes('Menyiapkan draft')) {
+        return alert('Belum ada Cover Letter yang digenerate!');
+    }
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Cover Letter / Body Email berhasil disalin ke clipboard! 📋');
+    }).catch(err => {
+        alert('Gagal menyalin teks: ' + err);
+    });
 }
 
 function toggleLiveEdit() {
