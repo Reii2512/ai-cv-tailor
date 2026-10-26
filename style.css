@@ -1,11 +1,16 @@
+html {
+    background-color: #0b0f19;
+    color-scheme: dark;
+}
+
 :root {
-    --bg-main: #0b0f19;     /* Gelap pekat menyatu dengan notification bar */
-    --card-bg: #111827;     /* Warna card/kotak utama (Dark Slate) */
-    --primary: #f8fafc;     /* Warna teks utama jadi terang */
-    --accent: #3b82f6;      /* Aksen biru modern */
-    --border: #1f2937;      /* Warna garis border tipis yang pas */
-    --text-main: #f3f4f6;   
-    --text-muted: #9ca3af;  /* Warna teks sekunder/deskripsi */
+    --bg-main: #0b0f19;
+    --card-bg: #111827;
+    --primary: #f8fafc;
+    --accent: #3b82f6;
+    --border: #1f2937;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
     --radius: 12px;
     --shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.4);
 }
@@ -23,7 +28,8 @@ body {
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    padding: 20px 12px;
+    min-height: 100dvh;
+    padding: env(safe-area-inset-top, 16px) 12px env(safe-area-inset-bottom, 24px) 12px;
 }
 
 .container {
@@ -43,7 +49,7 @@ body {
 }
 
 .card-sub {
-    background: #1f2937; /* Sub-card warna sedikit lebih terang dari background card */
+    background: #1f2937;
     border: 1px solid #374151;
     border-radius: 10px;
     padding: 18px;
@@ -110,7 +116,6 @@ body {
     line-height: 1.5;
 }
 
-/* Theme Selector Grid & Mini Preview Cohesive */
 .theme-grid {
     display: flex;
     flex-direction: column;
@@ -194,7 +199,6 @@ body {
 .mini-line.blue-bar { background: #2563eb; }
 .mini-line.double-bar { background: #111827; border-bottom: 1px solid #111827; }
 
-/* Wizard Navigation Tabs */
 .wizard-nav {
     display: flex;
     gap: 8px;
@@ -226,7 +230,6 @@ body {
 .wizard-panel.active { display: block; }
 .wizard-actions { display: flex; justify-content: space-between; margin-top: 24px; }
 
-/* Header Aplikasi */
 .app-header {
     display: flex;
     justify-content: space-between;
@@ -271,18 +274,6 @@ body {
     gap: 8px; 
 }
 
-.user-avatar {
-    width: 34px;
-    height: 34px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 .btn-icon { 
     background: rgba(255, 255, 255, 0.08); 
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -303,7 +294,6 @@ body {
     transform: scale(1.05);
 }
 
-/* Form Elements Dark Mode */
 .form-group { 
     display: flex; 
     flex-direction: column; 
@@ -331,7 +321,6 @@ input[type="text"], input[type="password"], input[type="month"], select, textare
 input:focus, select:focus, textarea:focus { border-color: var(--accent); background: #111827; }
 textarea { height: 95px; resize: vertical; }
 
-/* Buttons */
 .btn-google {
     width: 100%; background: #1f2937; border: 1px solid var(--border); color: #f3f4f6;
     padding: 14px; border-radius: 8px; font-size: 15px; font-weight: 600;
@@ -351,7 +340,6 @@ textarea { height: 95px; resize: vertical; }
 .btn-success { background: #10b981; color: white; border: none; padding: 11px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .btn-danger-sm { background: rgba(239, 68, 68, 0.2); color: #f87171; border: none; padding: 7px 12px; border-radius: 6px; font-size: 11.5px; cursor: pointer; font-weight: 600; }
 
-/* Score & Feedback Box */
 .score-card {
     display: flex;
     align-items: center;
@@ -388,7 +376,6 @@ textarea { height: 95px; resize: vertical; }
     overflow-y: auto;
 }
 
-/* ANIMASI LOADING SPINNER */
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -399,6 +386,7 @@ textarea { height: 95px; resize: vertical; }
     color: var(--text-muted);
     font-size: 13px;
     font-weight: 500;
+    text-align: center;
 }
 
 .spinner {
@@ -415,7 +403,6 @@ textarea { height: 95px; resize: vertical; }
     100% { transform: rotate(360deg); }
 }
 
-/* KERTAS PREVIEW CV (Tetap Putih Bersih Supaya ATS & Cetak PDF Sempurna) */
 .cv-paper {
     background: #ffffff;
     border: 1px solid #cbd5e1;
@@ -510,7 +497,6 @@ textarea { height: 95px; resize: vertical; }
 .output-section { border-top: 4px solid #10b981; }
 .output-actions { display: flex; gap: 10px; }
 
-/* Modal */
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; padding: 16px; z-index: 9999; }
 .modal-content { background: #111827; border: 1px solid var(--border); color: #f3f4f6; padding: 24px; border-radius: var(--radius); width: 100%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
 .modal-content input { margin: 8px 0 12px 0; background: #0b0f19; color: white; border: 1px solid var(--border); }
@@ -522,7 +508,6 @@ textarea { height: 95px; resize: vertical; }
 .modal-actions button { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer; }
 .modal-actions button:first-child { background: var(--accent); color: white; }
 
-/* Khusus Cetak PDF (Kertas Tetap Putih Bersih Saat Dicetak) */
 @media print {
     body * { visibility: hidden; }
     #cv-paper-preview, #cv-paper-preview * { visibility: visible; }

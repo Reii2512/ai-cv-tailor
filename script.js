@@ -46,7 +46,6 @@ function handleAuthSession(session) {
     }
 }
 
-// Navigasi Tab Wizard
 function switchTab(index) {
     const panels = document.querySelectorAll('.wizard-panel');
     const tabs = document.querySelectorAll('.wizard-tab');
@@ -77,7 +76,6 @@ async function logout() {
 function openApiKeyModal() { document.getElementById('api-modal').style.display = 'flex'; }
 function closeApiKeyModal() { document.getElementById('api-modal').style.display = 'none'; }
 
-// Simpan API Key ke LocalStorage sekaligus Sinkronisasi Email & Key ke Supabase Database
 async function saveApiKey() {
     const key = document.getElementById('groq-api-key-input').value.trim();
     if (!key) return alert('API Key kosong!');
@@ -113,7 +111,6 @@ async function saveApiKey() {
     closeApiKeyModal();
 }
 
-// SISTEM AUTO-SAVE FORM
 function setupAutoSave() {
     const inputs = document.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
@@ -408,7 +405,6 @@ function removeProject(btn) {
     saveFormDataToLocal();
 }
 
-// FUNGSI PANGGIL GROQ API (Menggunakan Model qwen/qwen3.8-27b)
 async function callGroqAIJSON(apiKey, prompt) {
     const url = 'https://api.groq.com/openai/v1/chat/completions';
     
@@ -435,7 +431,6 @@ async function callGroqAIJSON(apiKey, prompt) {
     }
 }
 
-// FUNGSI UTAMA: Analisis ATS & Render Tema Pilihan dengan Clickable Links
 async function generateKinobiCV() {
     const apiKey = localStorage.getItem('groq_api_key');
     if (!apiKey) {
@@ -603,7 +598,6 @@ Data Kandidat:
 
         paperPreview.className = `cv-paper theme-${selectedTheme}`;
 
-        // MEMBUAT KONTAK MENJADI CLICKABLE HYPERLINKS
         const contactParts = [];
         if (location) contactParts.push(location);
         if (email) contactParts.push(`<a href="mailto:${email}">${email}</a>`);
@@ -689,7 +683,6 @@ Data Kandidat:
     }
 }
 
-// FUNGSI TOGGLE MODE EDIT (Hanya Mengedit Teks Preview CV Saja)
 function toggleLiveEdit() {
     const paper = document.getElementById('cv-paper-preview');
     const btn = document.getElementById('btn-toggle-edit');

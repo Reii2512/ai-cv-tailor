@@ -2,47 +2,42 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI CV Tailor ✨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0b0f19">
+    <title>AI CV Tailor - ATS Professional CV Builder</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Supabase CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- PWA Config -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0f172a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <!-- Supabase JS Client UMD -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
     <div class="container">
-        <!-- VIEW LOGIN -->
+        <!-- VIEW 1: LOGIN / LANDING -->
         <div id="login-view" class="card login-card" style="display: none;">
             <div class="app-logo">✨</div>
             <h1>AI CV Tailor</h1>
             <p>Buat dan optimalkan CV profesional ramah ATS secara instan dengan bantuan Groq Qwen AI.</p>
-            <button onclick="loginWithGoogle()" class="btn-google">
-                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.95H1.19v3.15C3.17 21.32 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.25c-.25-.72-.38-1.49-.38-2.25s.13-1.53.38-2.25V6.6H1.19C.43 8.13 0 9.87 0 11.75s.43 3.62 1.19 5.15l4.09-2.65z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.17 2.68 1.19 6.6l4.09 3.15c.95-2.84 3.6-4.95 6.72-4.95z"/></svg>
+            <button class="btn-google" onclick="loginWithGoogle()">
+                <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.15C3.15 21.32 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.18C.43 8.12 0 9.83 0 12s.43 3.88 1.18 5.4l4.09-3.16z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.15 2.68 1.18 6.6l4.09 3.15c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
                 Masuk dengan Google
             </button>
         </div>
 
-        <!-- VIEW DASHBOARD -->
-        <div id="dashboard-view" class="card" style="display: none;">
-            <div class="app-header">
+        <!-- VIEW 2: DASHBOARD WIZARD -->
+        <div id="dashboard-view" style="display: none;">
+            <header class="app-header">
                 <div class="header-brand">
                     <h2>AI CV Tailor</h2>
                     <span class="pro-tag">GROQ QWEN</span>
                 </div>
                 <div class="user-menu">
-                    <div class="user-avatar" title="Akun Aktif">👤</div>
-                    <button onclick="openApiKeyModal()" class="btn-icon" title="Atur API Key">🔑</button>
-                    <button onclick="logout()" class="btn-icon" title="Keluar">🚪</button>
+                    <button class="btn-icon" onclick="openApiKeyModal()" title="Konfigurasi API Key">🔑</button>
+                    <button class="btn-icon" onclick="logout()" title="Keluar">🚪</button>
                 </div>
-            </div>
+            </header>
 
-            <!-- WIZARD NAVIGATION TABS -->
+            <!-- WIZARD TABS -->
             <div class="wizard-nav">
                 <button class="wizard-tab active" onclick="switchTab(0)">1. Tema</button>
                 <button class="wizard-tab" onclick="switchTab(1)">2. Job Desc</button>
@@ -51,306 +46,303 @@
                 <button class="wizard-tab" onclick="switchTab(4)">5. Preview & ATS</button>
             </div>
 
-            <!-- WIZARD PANELS -->
-            <form id="cv-form">
-                <!-- Panel 0: Pilih Tema & Preview Box -->
-                <div class="wizard-panel active" id="panel-0">
-                    <h3>Pilih Template / Tema CV</h3>
-                    <p>Pilih gaya layout yang bersih, profesional, dan ramah ATS.</p>
-                    
-                    <div class="theme-grid">
-                        <label class="theme-card">
-                            <input type="radio" name="cv-theme" value="corporate" checked>
-                            <div class="theme-info">
-                                <strong>Corporate Clean (Gaya SLB/ATS)</strong>
-                                <span>Satu kolom, garis bawah tegas, sangat rapi & profesional.</span>
-                            </div>
-                            <div class="mini-cv-preview">
-                                <div class="mini-header corporate-head"></div>
-                                <div class="mini-line title-line"></div>
-                                <div class="mini-line"></div>
-                                <div class="mini-line short"></div>
-                                <div class="mini-line title-line" style="margin-top: 6px;"></div>
-                                <div class="mini-line"></div>
-                            </div>
-                        </label>
+            <!-- PANEL 1: PILIH TEMA -->
+            <div class="card wizard-panel active" id="panel-0">
+                <h3>Pilih Template / Tema CV</h3>
+                <p>Pilih gaya layout yang bersih, profesional, dan ramah ATS.</p>
+                
+                <div class="theme-grid">
+                    <label class="theme-card">
+                        <input type="radio" name="cv-theme" value="corporate" checked>
+                        <div class="theme-info">
+                            <strong>Corporate Clean (Gaya SLB/ATS)</strong>
+                            <span>Satu kolom, garis bawah tegas, sangat rapi & profesional.</span>
+                        </div>
+                        <div class="mini-cv-preview">
+                            <div class="mini-header corporate-head"></div>
+                            <div class="mini-line title-line"></div>
+                            <div class="mini-line"></div>
+                            <div class="mini-line short"></div>
+                            <div class="mini-line title-line"></div>
+                            <div class="mini-line"></div>
+                        </div>
+                    </label>
 
-                        <label class="theme-card">
-                            <input type="radio" name="cv-theme" value="modern">
-                            <div class="theme-info">
-                                <strong>Modern Blue</strong>
-                                <span>Aksen biru minimalis, elegan untuk posisi tech & corporate.</span>
-                            </div>
-                            <div class="mini-cv-preview">
-                                <div class="mini-header modern-head"></div>
-                                <div class="mini-line title-line blue-bar"></div>
-                                <div class="mini-line"></div>
-                                <div class="mini-line short"></div>
-                                <div class="mini-line title-line blue-bar" style="margin-top: 6px;"></div>
-                                <div class="mini-line"></div>
-                            </div>
-                        </label>
+                    <label class="theme-card">
+                        <input type="radio" name="cv-theme" value="modern">
+                        <div class="theme-info">
+                            <strong>Modern Blue</strong>
+                            <span>Aksen biru minimalis, elegan untuk posisi tech & corporate.</span>
+                        </div>
+                        <div class="mini-cv-preview">
+                            <div class="mini-header modern-head"></div>
+                            <div class="mini-line title-line blue-bar"></div>
+                            <div class="mini-line"></div>
+                            <div class="mini-line short"></div>
+                            <div class="mini-line title-line blue-bar"></div>
+                            <div class="mini-line"></div>
+                        </div>
+                    </label>
 
-                        <label class="theme-card">
-                            <input type="radio" name="cv-theme" value="executive">
-                            <div class="theme-info">
-                                <strong>Executive Classic</strong>
-                                <span>Gaya klasik formal dengan garis ganda yang berwibawa.</span>
-                            </div>
-                            <div class="mini-cv-preview">
-                                <div class="mini-header exec-head"></div>
-                                <div class="mini-line title-line double-bar"></div>
-                                <div class="mini-line"></div>
-                                <div class="mini-line short"></div>
-                                <div class="mini-line title-line double-bar" style="margin-top: 6px;"></div>
-                                <div class="mini-line"></div>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="wizard-actions" style="justify-content: flex-end;">
-                        <button type="button" onclick="switchTab(1)" class="btn-primary">Lanjut &rarr;</button>
-                    </div>
+                    <label class="theme-card">
+                        <input type="radio" name="cv-theme" value="executive">
+                        <div class="theme-info">
+                            <strong>Executive Classic</strong>
+                            <span>Gaya klasik formal dengan garis ganda yang berwibawa.</span>
+                        </div>
+                        <div class="mini-cv-preview">
+                            <div class="mini-header exec-head"></div>
+                            <div class="mini-line title-line double-bar"></div>
+                            <div class="mini-line"></div>
+                            <div class="mini-line short"></div>
+                            <div class="mini-line title-line double-bar"></div>
+                            <div class="mini-line"></div>
+                        </div>
+                    </label>
                 </div>
 
-                <!-- Panel 1: Target PT, Role & Job Description -->
-                <div class="wizard-panel" id="panel-1">
-                    <h3>Target Perusahaan, Posisi & Job Description (JD)</h3>
-                    <p>Masukkan detail lowongan pekerjaan yang ingin kamu lamar.</p>
-                    
-                    <div class="form-group">
-                        <label>Nama PT / Perusahaan Tujuan</label>
-                        <input type="text" id="job-company" placeholder="Contoh: PT Solusi Teknologi Nusantara">
-                    </div>
+                <div class="wizard-actions" style="justify-content: flex-end;">
+                    <button class="btn-primary" onclick="switchTab(1)">Lanjut →</button>
+                </div>
+            </div>
 
-                    <div class="form-group">
-                        <label>Posisi / Role yang Dilamar</label>
-                        <input type="text" id="job-role" placeholder="Contoh: Junior System Administrator">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Lowongan Pekerjaan (Job Description)</label>
-                        <textarea id="job-desc" placeholder="Tempel deskripsi pekerjaan atau kualifikasi di sini..."></textarea>
-                    </div>
-
-                    <div class="wizard-actions">
-                        <button type="button" onclick="switchTab(0)" class="btn-secondary">&larr; Kembali</button>
-                        <button type="button" onclick="switchTab(2)" class="btn-primary">Lanjut &rarr;</button>
-                    </div>
+            <!-- PANEL 2: TARGET JOB DESC -->
+            <div class="card wizard-panel" id="panel-1">
+                <h3>Target Lowongan Kerja</h3>
+                <p>Masukkan informasi lowongan pekerjaan agar AI dapat mengoptimalkan isi CV sesuai posisi.</p>
+                
+                <div class="form-group">
+                    <label>Nama Perusahaan (Opsional)</label>
+                    <input type="text" id="job-company" placeholder="Contoh: PT Pertamina / Wilmar Group">
+                </div>
+                <div class="form-group">
+                    <label>Posisi / Role yang Dilamar</label>
+                    <input type="text" id="job-role" placeholder="Contoh: Instrument Technician / Data Center Engineer">
+                </div>
+                <div class="form-group">
+                    <label>Job Description / Kualifikasi Lowongan *</label>
+                    <textarea id="job-desc" placeholder="Tempel deskripsi pekerjaan atau persyaratan dari lowongan di sini..."></textarea>
                 </div>
 
-                <!-- Panel 2: Profil & Bahasa -->
-                <div class="wizard-panel" id="panel-2">
-                    <h3>Informasi Dasar, Bahasa & Kontak</h3>
-                    <p>Masukkan data diri, kontak lengkap, dan keahlian yang kamu miliki.</p>
+                <div class="wizard-actions">
+                    <button class="btn-secondary" onclick="switchTab(0)">← Kembali</button>
+                    <button class="btn-primary" onclick="switchTab(2)">Lanjut →</button>
+                </div>
+            </div>
 
-                    <div class="form-group">
-                        <label>Pilihan Bahasa Output CV</label>
-                        <select id="cv-language">
-                            <option value="id">Bahasa Indonesia (Cocok untuk BUMN / Perusahaan Lokal)</option>
-                            <option value="en">English (Cocok untuk Perusahaan Multinasional / Global)</option>
+            <!-- PANEL 3: PROFIL & BAHASA -->
+            <div class="card wizard-panel" id="panel-2">
+                <h3>Profil Pribadi & Bahasa Output</h3>
+                <p>Informasi dasar kontak Anda dan pilihan bahasa dokumen CV.</p>
+
+                <div class="form-group">
+                    <label>Bahasa Dokumen CV</label>
+                    <select id="cv-language">
+                        <option value="id">Bahasa Indonesia</option>
+                        <option value="en">English (Professional)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nama Lengkap (Beserta Gelar)</label>
+                    <input type="text" id="kinobi-name" placeholder="Contoh: Raihan Faishol Hikam, S.Tr.T">
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:2;">
+                        <label>Email Profesional</label>
+                        <input type="text" id="kinobi-email" placeholder="email@domain.com">
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Kode Negara</label>
+                        <select id="kinobi-country-code">
+                            <option value="+62">🇮🇩 +62</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+60">🇲🇾 +60</option>
+                            <option value="+65">🇸🇬 +65</option>
+                            <option value="+974">🇶🇦 +974</option>
+                            <option value="+44">🇬🇧 +44</option>
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <label>Nama Lengkap & Gelar</label>
-                        <input type="text" id="kinobi-name" placeholder="Contoh: Budi Santoso, S.T.">
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1;">
+                        <label>Nomor Telepon / WhatsApp</label>
+                        <input type="text" id="kinobi-phone" placeholder="81234567890">
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group" style="flex:1;">
-                            <label>Email Profesional</label>
-                            <input type="text" id="kinobi-email" placeholder="Contoh: budi.santoso@domain.com">
-                        </div>
-                        <div class="form-group" style="flex:1;">
-                            <label>Nomor Telepon / WhatsApp</label>
-                            <div style="display: flex; gap: 6px;">
-                                <select id="kinobi-country-code" style="width: 110px; flex-shrink: 0; font-size: 13px;">
-                                    <option value="+62">🇮🇩 +62</option>
-                                    <option value="+60">🇲🇾 +60</option>
-                                    <option value="+65">🇸🇬 +65</option>
-                                    <option value="+673">🇧🇳 +673</option>
-                                    <option value="+1">🇺🇸 +1</option>
-                                    <option value="+44">🇬🇧 +44</option>
-                                    <option value="+81">🇯🇵 +81</option>
-                                    <option value="+82">🇰🇷 +82</option>
-                                    <option value="+61">🇦🇺 +61</option>
-                                </select>
-                                <input type="text" id="kinobi-phone" placeholder="812-3456-7890" style="flex:1;">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
+                    <div class="form-group" style="flex:1;">
                         <label>Lokasi / Domisili</label>
-                        <input type="text" id="kinobi-location" placeholder="Contoh: Yogyakarta, DIY, Indonesia">
+                        <input type="text" id="kinobi-location" placeholder="Dumai, Riau, Indonesia">
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>Link Portofolio / LinkedIn / Web (Opsional)</label>
+                    <input type="text" id="kinobi-portfolio-link" placeholder="portfolioraihan25.netlify.app">
+                </div>
+                <div class="form-group">
+                    <label>Ringkasan Profesional Singkat</label>
+                    <textarea id="kinobi-summary" placeholder="Ringkasan singkat latar belakang keahlian Anda..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Keahlian Utama (Skills) *</label>
+                    <textarea id="kinobi-skills" placeholder="Contoh: PLC, SCADA, Microcontroller C/C++, Network Engineering, Troubleshooting..."></textarea>
+                </div>
 
-                    <div class="form-group">
-                        <label>Ringkasan Profesional Singkat</label>
-                        <textarea id="kinobi-summary" placeholder="Contoh: Fresh graduate teknik dengan minat kuat pada infrastruktur jaringan..."></textarea>
+                <div class="wizard-actions">
+                    <button class="btn-secondary" onclick="switchTab(1)">← Kembali</button>
+                    <button class="btn-primary" onclick="switchTab(3)">Lanjut →</button>
+                </div>
+            </div>
+
+            <!-- PANEL 4: RIWAYAT (PENGALAMAN, PENDIDIKAN, PROYEK) -->
+            <div class="card wizard-panel" id="panel-3">
+                <h3>Riwayat Pengalaman & Pendidikan</h3>
+                <p>Tambahkan pengalaman kerja/magang, pendidikan, dan proyek unggulan Anda.</p>
+
+                <!-- PENGALAMAN -->
+                <div style="font-weight:700; margin-bottom:10px; color:var(--primary); font-size:14px;">Pengalaman Kerja / Magang</div>
+                <div id="experience-container">
+                    <div class="experience-item card-sub">
+                        <div class="form-group">
+                            <label>Posisi / Jabatan</label>
+                            <input type="text" class="exp-title" placeholder="Contoh: Instrument Technician Intern">
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Perusahaan / Instansi</label>
+                            <input type="text" class="exp-company" placeholder="Contoh: PT Kilang Pertamina Internasional RU II Dumai">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex:1;">
+                                <label>Mulai</label>
+                                <input type="month" class="exp-start">
+                            </div>
+                            <div class="form-group" style="flex:1;">
+                                <label>Selesai</label>
+                                <input type="month" class="exp-end">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Deskripsi Tugas</label>
+                            <textarea class="exp-desc" placeholder="Tuliskan tugas, pemeliharaan, atau pencapaian..."></textarea>
+                        </div>
+                        <button type="button" onclick="removeExperience(this)" class="btn-danger-sm">Hapus Pengalaman</button>
                     </div>
+                </div>
+                <button type="button" class="btn-secondary" onclick="addExperience()" style="width:100%; margin-bottom:20px;">+ Tambah Pengalaman Lain</button>
 
-                    <div class="form-group">
-                        <label>Keahlian Utama (Dipisahkan koma)</label>
-                        <textarea id="kinobi-skills" placeholder="Contoh: Python, Networking, Troubleshooting, SQL"></textarea>
+                <!-- PENDIDIKAN -->
+                <div style="font-weight:700; margin-bottom:10px; color:var(--primary); font-size:14px;">Pendidikan</div>
+                <div id="education-container">
+                    <div class="education-item card-sub">
+                        <div class="form-group">
+                            <label>Nama Institusi / Kampus</label>
+                            <input type="text" class="edu-institution" placeholder="Contoh: Politeknik Caltex Riau">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex:1;">
+                                <label>Lokasi Kampus</label>
+                                <input type="text" class="edu-location" placeholder="Contoh: Pekanbaru, Riau">
+                            </div>
+                            <div class="form-group" style="flex:1;">
+                                <label>Gelar & Jurusan</label>
+                                <input type="text" class="edu-degree" placeholder="Contoh: Sarjana Terapan - Teknik Elektronika Telekomunikasi">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group" style="flex:1;">
+                                <label>Periode Masuk — Lulus</label>
+                                <input type="text" class="edu-period" placeholder="Contoh: 2022 - 2026">
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Rincian / Prestasi (Opsional)</label>
+                            <textarea class="edu-desc" placeholder="Contoh: Lulus Cum Laude (IPK 3.59)..."></textarea>
+                        </div>
+                        <button type="button" onclick="removeEducation(this)" class="btn-danger-sm">Hapus Pendidikan</button>
                     </div>
+                </div>
+                <button type="button" class="btn-secondary" onclick="addEducation()" style="width:100%; margin-bottom:20px;">+ Tambah Pendidikan Lain</button>
 
-                    <div class="form-group">
-                        <label>Link Portofolio / LinkedIn</label>
-                        <input type="text" id="kinobi-portfolio-link" placeholder="Contoh: https://portfolio-budi.netlify.app">
+                <!-- PROYEK -->
+                <div style="font-weight:700; margin-bottom:10px; color:var(--primary); font-size:14px;">Proyek / Capstone / Portofolio</div>
+                <div id="project-container">
+                    <div class="project-item card-sub">
+                        <div class="form-group">
+                            <label>Nama Proyek</label>
+                            <input type="text" class="proj-name" placeholder="Contoh: IoT-Based Smart Poultry Weighing System">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Deskripsi & Teknologi</label>
+                            <textarea class="proj-desc" placeholder="Menggunakan ESP32, Arduino, HX711, load cell, web server lokal..."></textarea>
+                        </div>
+                        <button type="button" onclick="removeProject(this)" class="btn-danger-sm">Hapus Proyek</button>
                     </div>
+                </div>
+                <button type="button" class="btn-secondary" onclick="addProject()" style="width:100%; margin-bottom:10px;">+ Tambah Proyek Lain</button>
 
-                    <div class="wizard-actions">
-                        <button type="button" onclick="switchTab(1)" class="btn-secondary">&larr; Kembali</button>
-                        <button type="button" onclick="switchTab(3)" class="btn-primary">Lanjut &rarr;</button>
+                <div class="wizard-actions">
+                    <button class="btn-secondary" onclick="switchTab(2)">← Kembali</button>
+                    <button class="btn-success-lg" onclick="generateKinobiCV()">🚀 Buat & Optimalkan CV dengan Qwen AI</button>
+                </div>
+            </div>
+
+            <!-- PANEL 5: PREVIEW & ATS -->
+            <div class="card wizard-panel output-section" id="panel-4">
+                <h3>Hasil Optimasi & Pratinjau CV</h3>
+                <p>Pratinjau dokumen CV Anda yang telah dioptimalkan oleh Groq Qwen AI.</p>
+
+                <!-- ATS SCORE & FEEDBACK -->
+                <div class="score-card">
+                    <div class="score-circle" id="ats-score-badge">--</div>
+                    <div class="score-info">
+                        <h4 id="score-title">Skor Kecocokan ATS</h4>
+                        <p id="score-desc">Menunggu analisis AI...</p>
+                    </div>
+                </div>
+                <div class="feedback-box" id="ats-feedback-box">
+                    Ulasan dan saran perbaikan ATS akan muncul di sini setelah proses selesai.
+                </div>
+
+                <div style="margin: 16px 0 8px 0; display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size:13px; color:var(--primary);">Pratinjau Dokumen CV (Bisa Diedit Langsung)</strong>
+                    <button class="btn-primary" id="btn-toggle-edit" onclick="toggleLiveEdit()" style="padding: 7px 12px; font-size: 11.5px;">Aktifkan Mode Edit ✍️</button>
+                </div>
+
+                <!-- KERTAS PREVIEW -->
+                <div id="cv-paper-preview" class="cv-paper">
+                    <div class="loading-container">
+                        <p>Belum ada CV yang digenerate. Silakan lengkapi data dan klik tombol Buat CV di panel sebelumnya.</p>
                     </div>
                 </div>
 
-                <!-- Panel 3: Riwayat -->
-                <div class="wizard-panel" id="panel-3">
-                    <h3>Riwayat Pengalaman & Pendidikan</h3>
-                    <p>Tambahkan riwayat magang, kerja, pendidikan, dan proyek unggulanmu.</p>
-
-                    <h3 style="margin-top:10px;">Pengalaman Kerja / Magang</h3>
-                    <div id="experience-container">
-                        <div class="experience-item card-sub">
-                            <div class="form-group">
-                                <label>Posisi / Jabatan</label>
-                                <input type="text" class="exp-title" placeholder="Contoh: IT Support Intern">
-                            </div>
-                            <div class="form-group">
-                                <label>Nama Perusahaan / Instansi</label>
-                                <input type="text" class="exp-company" placeholder="Contoh: PT Digital Kreasi Nusantara">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group" style="flex:1;">
-                                    <label>Mulai</label>
-                                    <input type="month" class="exp-start">
-                                </div>
-                                <div class="form-group" style="flex:1;">
-                                    <label>Selesai</label>
-                                    <input type="month" class="exp-end">
-                                </div>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>Deskripsi Tugas</label>
-                                <textarea class="exp-desc" placeholder="Contoh: Melakukan pemeliharaan perangkat jaringan..."></textarea>
-                            </div>
-                            <button type="button" onclick="removeExperience(this)" class="btn-danger-sm">Hapus Pengalaman</button>
-                        </div>
-                    </div>
-                    <button type="button" onclick="addExperience()" class="btn-secondary" style="margin-bottom:16px;">+ Tambah Pengalaman</button>
-
-                    <h3>Pendidikan</h3>
-                    <div id="education-container">
-                        <div class="education-item card-sub">
-                            <div class="form-group">
-                                <label>Nama Institusi / Kampus</label>
-                                <input type="text" class="edu-institution" placeholder="Contoh: Universitas Teknologi Nusantara">
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group" style="flex:1;">
-                                    <label>Lokasi Kampus</label>
-                                    <input type="text" class="edu-location" placeholder="Contoh: Surabaya, Jawa Timur">
-                                </div>
-                                <div class="form-group" style="flex:1;">
-                                    <label>Gelar & Jurusan</label>
-                                    <input type="text" class="edu-degree" placeholder="Contoh: Sarjana Teknik - Teknik Informatika">
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group" style="flex:1;">
-                                    <label>Periode Masuk — Lulus</label>
-                                    <input type="text" class="edu-period" placeholder="Contoh: Aug 2021 - Aug 2025">
-                                </div>
-                            </div>
-                            <div class="form-group full-width">
-                                <label>Rincian / Prestasi (Opsional)</label>
-                                <textarea class="edu-desc" placeholder="Contoh: Lulus dengan predikat Cum Laude (IPK 3.75/4.00)..."></textarea>
-                            </div>
-                            <button type="button" onclick="removeEducation(this)" class="btn-danger-sm">Hapus Pendidikan</button>
-                        </div>
-                    </div>
-                    <button type="button" onclick="addEducation()" class="btn-secondary" style="margin-bottom:16px;">+ Tambah Pendidikan</button>
-
-                    <h3>Proyek & Portofolio</h3>
-                    <div id="project-container">
-                        <div class="project-item card-sub">
-                            <div class="form-group">
-                                <label>Nama Proyek</label>
-                                <input type="text" class="proj-name" placeholder="Contoh: E-Commerce Web Platform">
-                            </div>
-                            <div class="form-group full-width">
-                                <label>Deskripsi & Teknologi</label>
-                                <textarea class="proj-desc" placeholder="Contoh: Membangun sistem toko online menggunakan React dan Node.js..."></textarea>
-                            </div>
-                            <button type="button" onclick="removeProject(this)" class="btn-danger-sm">Hapus Proyek</button>
-                        </div>
-                    </div>
-                    <button type="button" onclick="addProject()" class="btn-secondary" style="margin-bottom:20px;">+ Tambah Proyek</button>
-
-                    <div class="wizard-actions">
-                        <button type="button" onclick="switchTab(2)" class="btn-secondary">&larr; Kembali</button>
-                        <button type="button" onclick="generateKinobiCV()" class="btn-success-lg">✨ Generate & Analisis ATS</button>
-                    </div>
+                <div class="output-actions" style="margin-top: 20px;">
+                    <button class="btn-secondary" onclick="switchTab(3)">← Edit Data</button>
+                    <button class="btn-success" onclick="exportToPDF()" style="flex:1;">Cetak / Download PDF 📄</button>
                 </div>
-
-                <!-- Panel 4: Preview & Hasil ATS -->
-                <div class="wizard-panel" id="panel-4">
-                    <h3>Hasil Analisis AI & Preview CV</h3>
-                    <p>CV kamu telah dioptimalkan agar lolos sistem ATS.</p>
-
-                    <div class="score-card">
-                        <div class="score-circle">...</div>
-                        <div class="score-info">
-                            <h4 id="score-desc">Menunggu proses...</h4>
-                            <div id="ats-feedback-box" class="feedback-box">Ulasan dan saran perbaikan akan muncul di sini.</div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                            <label>Preview & Edit Langsung CV</label>
-                            <button type="button" id="btn-toggle-edit" onclick="toggleLiveEdit()" class="btn-secondary" style="padding: 4px 10px; font-size: 11px;">Aktifkan Mode Edit ✍️</button>
-                        </div>
-                        <div id="cv-paper-preview" class="cv-paper">
-                            <div style="text-align:center; padding:30px; color:#64748b;">Belum ada data yang digenerate.</div>
-                        </div>
-                    </div>
-
-                    <div class="output-actions" style="margin-top: 16px;">
-                        <button type="button" onclick="exportToPDF()" class="btn-success" style="flex:1;">Unduh / Cetak PDF 📄</button>
-                    </div>
-
-                    <div class="wizard-actions" style="margin-top: 16px;">
-                        <button type="button" onclick="switchTab(3)" class="btn-secondary">&larr; Edit Data Form</button>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL API KEY -->
+    <!-- MODAL API KEY GROQ -->
     <div id="api-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <h3>Atur Groq API Key</h3>
-            <p>Masukkan Groq API Key kamu untuk mulai menggunakan AI secara gratis.</p>
-            <input type="password" id="groq-api-key-input" placeholder="gsk_...">
+            <h3 style="margin-bottom:8px; color:var(--primary);">Konfigurasi Groq API Key</h3>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Masukkan Groq API Key Anda untuk menghubungkan mesin Qwen AI.</p>
             
             <div class="api-tutorial">
-                <p class="tutorial-title">Cara mendapatkan API Key gratis:</p>
+                <div class="tutorial-title">Cara mendapatkan API Key gratis:</div>
                 <ol>
-                    <li>Buka <a href="https://console.groq.com/" target="_blank">console.groq.com</a>.</li>
-                    <li>Login menggunakan akun Google / GitHub Anda.</li>
-                    <li>Klik tombol <strong>Create API Key</strong>.</li>
-                    <li>Salin dan tempel kuncinya ke kolom di atas.</li>
+                    <li>Buka <a href="https://console.cloud.groq.com" target="_blank">console.cloud.groq.com</a></li>
+                    <li>Masuk atau daftar akun baru.</li>
+                    <li>Buka menu <strong>API Keys</strong> lalu klik <em>Create API Key</em>.</li>
                 </ol>
             </div>
 
+            <div class="form-group">
+                <label>Groq API Key</label>
+                <input type="password" id="groq-api-key-input" placeholder="gsk_...">
+            </div>
             <div class="modal-actions">
-                <button onclick="saveApiKey()" class="btn-primary">Simpan</button>
-                <button onclick="closeApiKeyModal()" class="btn-secondary">Batal</button>
+                <button onclick="saveApiKey()">Simpan Key</button>
+                <button class="btn-secondary" onclick="closeApiKeyModal()" style="background:#374151; color:#f3f4f6;">Batal</button>
             </div>
         </div>
     </div>
